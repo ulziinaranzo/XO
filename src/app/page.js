@@ -1,25 +1,22 @@
-"use client"
-import { useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
 import styles from "./page.module.css";
 
 export default function Home() {
   const [board, setBoard] = useState(Array(9).fill(""));
-  const [turnX, setTurnX] = useState(true);
+  const [turn, setTurn] = useState("X");
   const [winner, setWinner] = useState(null);
+  const [draw, setDraw] = useState(false);
 
   const handleClick = (index) => {
-    if (board[index] || winner) return; 
-    const newBoard = board.map((cell, i) =>
-      i === index ? (turnX ? "X" : "O") : cell
-    );
-
+    if (board[index] || winner) return;
+    const newBoard = [...board];
+    newBoard[index] = turn;
     setBoard(newBoard);
-    setTurnX(!turnX);
-
+    setTurn(turn === "X" ? "O" : "X");
     const newWinner = checkWinner(newBoard);
     if (newWinner) setWinner(newWinner);
   };
-
   const winningCombos = [
     [0, 1, 2],
     [3, 4, 5],
@@ -45,12 +42,17 @@ export default function Home() {
     return null;
   };
 
+  useEffect(() => {
+    if (!board.includes("") && !winner) {
+      setDraw(true);
+    }
+  }, [board, winner]);
   const reset = () => {
     setBoard(Array(9).fill(""));
-    setTurnX(true);
+    setTurn("X");
     setWinner(null);
+    setDraw(false);
   };
-
   return (
     <div className={styles.container}>
       <h1>Tic-Tac-Toe</h1>
@@ -69,6 +71,7 @@ export default function Home() {
         Reset
       </button>
       {winner && <h2>Winner: {winner}</h2>}
+      {draw && !winner && <h3>DRAW</h3>}
     </div>
   );
 }
