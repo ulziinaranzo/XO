@@ -5,7 +5,8 @@ import styles from "./page.module.css"
 
 export default function Home() {
 const [board, setBoard] = useState(["", "", "", "", "", "", "", "", ""])
-const [turn, setTurn] = useState("X")
+const [turn, setTurn] = useState("X");
+const []
 
 
 const handleClick = () => {
@@ -14,6 +15,8 @@ const handleClick = () => {
   setTurn(turn === "X" ? "O": "X")
   setBoard(newBoard)
 }
+
+
   return (
     <div className={styles.container}>
       <div className={styles.flexcontainer}>
