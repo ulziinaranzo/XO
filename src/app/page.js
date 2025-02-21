@@ -8,15 +8,6 @@ export default function Home() {
   const [winner, setWinner] = useState(null);
   const [draw, setDraw] = useState(false);
 
-  const handleClick = (index) => {
-    if (board[index] || winner) return;
-    const newBoard = [...board];
-    newBoard[index] = turn;
-    setBoard(newBoard);
-    setTurn(turn === "X" ? "O" : "X");
-    const newWinner = checkWinner(newBoard);
-    if (newWinner) setWinner(newWinner);
-  };
   const winningCombos = [
     [0, 1, 2],
     [3, 4, 5],
@@ -28,31 +19,40 @@ export default function Home() {
     [2, 4, 6],
   ];
 
-  const checkWinner = (curBoard) => {
+  useEffect(() => {
+    // Check for a winner
     for (let i = 0; i < winningCombos.length; i++) {
       const [a, b, c] = winningCombos[i];
       if (
-        curBoard[a] === curBoard[b] &&
-        curBoard[b] === curBoard[c] &&
-        curBoard[b] !== ""
+        board[a] === board[b] &&
+        board[b] === board[c] &&
+        board[a] !== ""
       ) {
-        return curBoard[b];
+        setWinner(board[a]);
+        return; 
       }
     }
-    return null;
-  };
 
-  useEffect(() => {
     if (!board.includes("") && !winner) {
       setDraw(true);
     }
   }, [board, winner]);
+
+  const handleClick = (index) => {
+    if (board[index] || winner) return;
+    const newBoard = [...board];
+    newBoard[index] = turn;
+    setBoard(newBoard);
+    setTurn(turn === "X" ? "O" : "X");
+  };
+
   const reset = () => {
     setBoard(Array(9).fill(""));
     setTurn("X");
     setWinner(null);
     setDraw(false);
   };
+
   return (
     <div className={styles.container}>
       <h1>Tic-Tac-Toe</h1>
